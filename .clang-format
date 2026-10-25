@@ -1,5 +1,6 @@
 BasedOnStyle: LLVM
 
+# clang-format uses its C/C++ parser for project C11 source.
 Language: Cpp
 Standard: c++11
 
@@ -7,13 +8,22 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
+# Allman applies to functions and control statements. Braced initializers stay
+# on the declaration line when they fit within the column limit.
 BreakBeforeBraces: Allman
+Cpp11BracedListStyle: true
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
 
 IndentCaseLabels: false
-
 ColumnLimit: 100
 
 PointerAlignment: Right
+DerivePointerAlignment: false
 
 AlignOperands: Align
 AlignConsecutiveAssignments: None
@@ -21,10 +31,10 @@ AlignConsecutiveDeclarations: None
 
 SpaceBeforeParens: ControlStatements
 
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
-
+# Include groups and ordering are maintained manually.
 SortIncludes: Never
+IncludeBlocks: Preserve
 
 IndentPPDirectives: None
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false

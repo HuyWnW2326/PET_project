@@ -3,83 +3,66 @@
 ## Project
 
 Target: STM32F103C8T6
-Architecture: ARM Cortex-M3
-Language: C11
-Toolchain: arm-none-eabi-gcc
-Goal: Bare-metal firmware and future MicroC/OS-II port.
 
-## Coding Standard
+Architecture: ARM Cortex-M3
+
+Language: ISO C11
+
+Toolchain: `arm-none-eabi-gcc`
+
+Goal: Bare-metal firmware and a future MicroC/OS-II port.
+
+## Authoritative conventions
 
 Read and follow:
 
-- Docs/CODING_STANDARD.md
-- .clang-format
+- `Docs/CODING_STANDARD.md` for project coding and organization rules.
+- `.clang-format` for mechanically enforced layout.
 
-Docs/CODING_STANDARD.md is the authoritative coding
-standard for project-owned source code.
-
-.clang-format defines mechanical formatting rules.
-
-If these files conflict, report the conflict before editing.
+Do not duplicate detailed style rules in this file. If these documents conflict, report and
+reconcile the conflict before editing. Hardware specifications, the C language, the ABI, and
+required linker, interrupt, startup, or RTOS interfaces take precedence over cosmetic rules.
 
 ## Architecture
 
-App/
-- Application code.
+- `App/`: application code.
+- `Core/`: startup, vector table, RCC, clock configuration, and ARM Cortex-M3 infrastructure.
+- `Drivers/`: reusable peripheral drivers.
+- `OS/`: future MicroC/OS-II integration.
 
-Core/
-- Startup, vector table, RCC, clock configuration,
-  and ARM Cortex-M3 infrastructure.
+## Change workflow
 
-Drivers/
-- Reusable peripheral drivers.
+1. Before broad refactoring, audit the affected files and read the applicable project conventions.
+2. Inspect `git status` and the relevant diff before editing. Preserve unrelated and pre-existing
+   changes in the worktree.
+3. Keep each change within the requested scope. Do not refactor unrelated modules or introduce
+   unnecessary abstractions.
+4. Explain architectural changes and obtain approval before implementation.
+5. Do not commit changes automatically.
 
-OS/
-- Future MicroC/OS-II integration.
+## Modification constraints
 
-## Modification Rules
-
-1. Preserve existing program behavior.
-2. Do not modify register addresses or bit definitions
-   during style-only refactoring.
-3. Do not modify startup or vector table logic without approval.
-4. Do not modify the linker script without approval.
-5. Do not modify clock frequencies without approval.
-6. Do not rename public APIs without approval.
-7. Preserve ABI-required interrupt handler names.
-8. Do not introduce STM32 HAL or LL dependencies.
-9. Do not refactor unrelated modules.
-10. Do not create unnecessary abstractions.
-
-## Code Style
-
-- Use C11.
-- Use 4 spaces for indentation.
-- Use Allman braces.
-- Follow the repository .clang-format file.
-- Use project-specific include guards.
-- Follow the naming rules in Docs/CODING_STANDARD.md.
-- Write comments and API documentation in English.
-- Use Doxygen comments for public APIs.
-- Prefer explicit fixed-width integer types.
+- Preserve existing program behavior during style-only work.
+- Do not modify register addresses, offsets, masks, bit values, or volatile semantics.
+- Do not change hardware access ordering, startup behavior, vector-table contents or order, linker
+  symbols, clock frequencies, public APIs, or interrupt-handler names without explicit approval.
+- Do not modify the linker script without explicit approval.
+- Do not introduce STM32 HAL, STM32 LL, or CMSIS peripheral-driver dependencies.
+- Preserve ARM Cortex-M3 ABI requirements and required future MicroC/OS-II integration interfaces.
+- Do not modify or restyle third-party MicroC/OS-II code during project refactoring.
 
 ## Verification
 
-After making changes:
+After editing project code:
 
-1. Run clang-format on modified C/H files.
-2. Run make clean && make.
+1. Run clang-format on modified project-owned C and header files.
+2. Run `make clean && make`.
 3. Check compiler warnings.
-4. Review git diff.
-5. Report modified files.
-6. Report any verification that could not be performed.
+4. Run `git diff --check` and review the complete diff.
+5. Report every modified file and any verification that could not be performed.
 
-A successful build does not prove correct hardware behavior.
+For documentation-only or configuration-only work, run the checks relevant to those files and
+validate any changed configuration with its intended tool version.
 
-## Important
-
-Do not modify third-party MicroC/OS-II source files
-during project coding-style refactoring.
-
-For architectural changes, explain the proposed changes
-and wait for approval.
+A successful build does not prove correct hardware behavior. Do not claim on-board verification
+unless the firmware was flashed and tested on the target.
