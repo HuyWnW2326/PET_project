@@ -59,7 +59,6 @@ typedef enum
     /* ADC */
     RCC_PERIPH_ADC1 = RCC_PERIPH_ID(RCC_BUS_APB2, 9),
     RCC_PERIPH_ADC2 = RCC_PERIPH_ID(RCC_BUS_APB2, 10)
-
 } RCC_Peripheral_t;
 
 /**
@@ -70,43 +69,37 @@ typedef enum
     RCC_OK = 0,
     RCC_ERROR_INVALID_PERIPHERAL,
     RCC_ERROR_UNSUPPORTED_OPERATION
-
 } RCC_Status_t;
 
 /**
  * @brief Enable a peripheral clock.
- * @note Reads back the enable register before returning. No readiness polling.
- *       Serialize RCC register updates with other callers and interrupts.
  *
  * @param peripheral Peripheral identifier.
- *
  * @return RCC_OK on success, RCC_ERROR_INVALID_PERIPHERAL for an unknown ID,
  *         or RCC_ERROR_UNSUPPORTED_OPERATION if the bus has no enable register.
+ * @note Reads back the enable register before returning. No readiness polling.
+ *       Serialize RCC register updates with other callers and interrupts.
  */
 RCC_Status_t RCC_EnableClock(RCC_Peripheral_t peripheral);
 
 /**
  * @brief Disable a peripheral clock.
- * @note Stops the peripheral clock without waiting for ongoing transfers.
- *       Serialize RCC register updates with other callers and interrupts.
  *
  * @param peripheral Peripheral identifier.
- *
  * @return RCC_OK on success, RCC_ERROR_INVALID_PERIPHERAL for an unknown ID,
  *         or RCC_ERROR_UNSUPPORTED_OPERATION if the bus has no enable register.
+ * @note Stops the peripheral clock without waiting for ongoing transfers.
+ *       Serialize RCC register updates with other callers and interrupts.
  */
 RCC_Status_t RCC_DisableClock(RCC_Peripheral_t peripheral);
 
 /**
  * @brief Reset peripheral through RCC reset register.
  *
- * @note AHB peripherals such as DMA1 do not support
- *       this reset mechanism.
- *
  * @param peripheral Peripheral identifier.
- *
  * @return RCC_OK on success, RCC_ERROR_INVALID_PERIPHERAL for an unknown ID,
  *         or RCC_ERROR_UNSUPPORTED_OPERATION for an unsupported reset bus.
+ * @note AHB peripherals such as DMA1 do not support this reset mechanism.
  * @note Asserts reset, reads back the register, then releases reset without
  *       polling. Peripheral state is reset. Serialize RCC register updates
  *       with other callers and interrupts.

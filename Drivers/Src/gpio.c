@@ -48,40 +48,26 @@ static GPIO_TypeDef *GPIO_GetPort(uint32_t port)
 
 GPIO_Status_t GPIO_Config(uint32_t cfgset)
 {
-    GPIO_TypeDef *gpio;
-
-    volatile uint32_t *config_reg;
-
-    uint32_t port;
-    uint32_t pin;
-    uint32_t mode;
-    uint32_t cnf;
-    uint32_t modecnf;
-    uint32_t position;
-    uint32_t shift;
-    uint32_t regval;
-
-    bool input;
-
     if ((cfgset & ~GPIO_CFG_ALLOWED_MASK) != 0UL)
     {
         return GPIO_INVALID_CONFIG;
     }
 
-    port = (cfgset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
-    pin = (cfgset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
+    uint32_t port = (cfgset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
+    uint32_t pin = (cfgset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
 
-    gpio = GPIO_GetPort(port);
+    GPIO_TypeDef *gpio = GPIO_GetPort(port);
 
     if (gpio == (GPIO_TypeDef *)0)
     {
         return GPIO_INVALID_CONFIG;
     }
 
-    input = ((cfgset & GPIO_INPUT) != 0UL);
+    bool input = ((cfgset & GPIO_INPUT) != 0UL);
 
-    mode = (cfgset & GPIO_MODE_MASK) >> GPIO_MODE_SHIFT;
-    cnf = (cfgset & GPIO_CNF_MASK) >> GPIO_CNF_SHIFT;
+    uint32_t mode = (cfgset & GPIO_MODE_MASK) >> GPIO_MODE_SHIFT;
+    uint32_t cnf = (cfgset & GPIO_CNF_MASK) >> GPIO_CNF_SHIFT;
+    uint32_t mode_cnf;
 
     if (input)
     {
@@ -95,7 +81,7 @@ GPIO_Status_t GPIO_Config(uint32_t cfgset)
             return GPIO_INVALID_CONFIG;
         }
 
-        modecnf = cnf << 2U;
+        mode_cnf = cnf << 2U;
     }
     else
     {
@@ -109,8 +95,11 @@ GPIO_Status_t GPIO_Config(uint32_t cfgset)
             return GPIO_INVALID_CONFIG;
         }
 
-        modecnf = (cnf << 2U) | mode;
+        mode_cnf = (cnf << 2U) | mode;
     }
+
+    volatile uint32_t *config_reg;
+    uint32_t position;
 
     if (pin < GPIO_CRL_PIN_COUNT)
     {
@@ -123,7 +112,7 @@ GPIO_Status_t GPIO_Config(uint32_t cfgset)
         position = pin - GPIO_CRL_PIN_COUNT;
     }
 
-    shift = position * GPIO_CR_FIELD_WIDTH;
+    uint32_t shift = position * GPIO_CR_FIELD_WIDTH;
 
     /*
      * Prepare output state before enabling output.
@@ -146,27 +135,23 @@ GPIO_Status_t GPIO_Config(uint32_t cfgset)
         }
     }
 
-    regval = *config_reg;
+    uint32_t register_value = *config_reg;
 
-    regval &= ~(GPIO_CR_FIELD_MASK << shift);
+    register_value &= ~(GPIO_CR_FIELD_MASK << shift);
 
-    regval |= (modecnf << shift);
+    register_value |= (mode_cnf << shift);
 
-    *config_reg = regval;
+    *config_reg = register_value;
 
     return GPIO_OK;
 }
 
 void GPIO_Write(uint32_t pinset, GPIO_State_t state)
 {
-    uint32_t port;
-    uint32_t pin;
-    GPIO_TypeDef *gpio;
+    uint32_t port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
+    uint32_t pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
 
-    port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
-    pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
-
-    gpio = GPIO_GetPort(port);
+    GPIO_TypeDef *gpio = GPIO_GetPort(port);
 
     if (gpio == (GPIO_TypeDef *)0)
     {
@@ -185,14 +170,10 @@ void GPIO_Write(uint32_t pinset, GPIO_State_t state)
 
 GPIO_State_t GPIO_Read(uint32_t pinset)
 {
-    uint32_t port;
-    uint32_t pin;
-    GPIO_TypeDef *gpio;
+    uint32_t port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
+    uint32_t pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
 
-    port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
-    pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
-
-    gpio = GPIO_GetPort(port);
+    GPIO_TypeDef *gpio = GPIO_GetPort(port);
 
     if (gpio == (GPIO_TypeDef *)0)
     {
@@ -209,14 +190,10 @@ GPIO_State_t GPIO_Read(uint32_t pinset)
 
 void GPIO_Toggle(uint32_t pinset)
 {
-    uint32_t port;
-    uint32_t pin;
-    GPIO_TypeDef *gpio;
+    uint32_t port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
+    uint32_t pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
 
-    port = (pinset & GPIO_PORT_MASK) >> GPIO_PORT_SHIFT;
-    pin = (pinset & GPIO_PIN_MASK) >> GPIO_PIN_SHIFT;
-
-    gpio = GPIO_GetPort(port);
+    GPIO_TypeDef *gpio = GPIO_GetPort(port);
 
     if (gpio == (GPIO_TypeDef *)0)
     {

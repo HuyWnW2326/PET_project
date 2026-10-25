@@ -147,8 +147,9 @@
 #define GPIO_PIN14 (14UL << GPIO_PIN_SHIFT)
 #define GPIO_PIN15 (15UL << GPIO_PIN_SHIFT)
 
-/* GPIO Types */
-
+/**
+ * @brief GPIO operation status.
+ */
 typedef enum
 {
     GPIO_OK = 0,
@@ -156,6 +157,9 @@ typedef enum
     GPIO_INVALID_CONFIG
 } GPIO_Status_t;
 
+/**
+ * @brief GPIO logic state.
+ */
 typedef enum
 {
     GPIO_LOW = 0,
@@ -201,11 +205,11 @@ GPIO_State_t GPIO_Read(uint32_t pinset);
 
 /**
  * @brief Toggle the output state of a GPIO pin.
+ *
+ * @param pinset Encoded GPIO port and pin.
  * @note Enable the GPIO clock and configure the pin before calling. Reads ODR
  *       then writes BSRR without polling; unsupported ports are ignored.
  *       Serialize access with other writers, including interrupt handlers.
- *
- * @param pinset Encoded GPIO port and pin.
  */
 void GPIO_Toggle(uint32_t pinset);
 

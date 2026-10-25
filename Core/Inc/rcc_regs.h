@@ -20,7 +20,6 @@ typedef struct
     volatile uint32_t APB1ENR;
     volatile uint32_t BDCR;
     volatile uint32_t CSR;
-
 } RCC_TypeDef;
 
 #define RCC_BASE (0x40021000UL)

@@ -1,6 +1,9 @@
 #include "gpio.h"
 #include "rcc.h"
 
+#define LED_CONFIG                                                                                 \
+    (GPIO_PORTC | GPIO_PIN13 | GPIO_OUTPUT | GPIO_CNF_OUT_PP | GPIO_MODE_2MHZ | GPIO_INIT_HIGH)
+
 /**
  * @brief Stores the result of the application clock-enable request.
  *
@@ -8,12 +11,9 @@
  */
 volatile RCC_Status_t g_rcc_status;
 
-#define LED_CONFIG                                                                                 \
-    (GPIO_PORTC | GPIO_PIN13 | GPIO_OUTPUT | GPIO_CNF_OUT_PP | GPIO_MODE_2MHZ | GPIO_INIT_HIGH)
-
 /**
  * @brief Configure the application LED pin and remain in the main loop.
- * @return Does not return.
+ * @note This function does not return.
  */
 int main(void)
 {
@@ -24,7 +24,7 @@ int main(void)
     {
         while (1)
         {
-            /* GPIO configuration failed */
+            /* Halt if GPIO configuration fails. */
         }
     }
 

@@ -4,17 +4,9 @@
 
 #include "rcc_regs.h"
 
-/* ============================================================
- * Private macros
- * ============================================================ */
-
 #define RCC_GET_BUS(peripheral_id) (((uint32_t)(peripheral_id) >> 5U) & 0x07U)
 
 #define RCC_GET_BIT(peripheral_id) (((uint32_t)(peripheral_id)) & 0x1FU)
-
-/* ============================================================
- * Private functions
- * ============================================================ */
 
 /**
  * @brief Check whether a peripheral ID is supported.
@@ -107,10 +99,6 @@ static volatile uint32_t *RCC_GetResetRegister(uint32_t bus)
     }
 }
 
-/* ============================================================
- * Public functions
- * ============================================================ */
-
 RCC_Status_t RCC_EnableClock(RCC_Peripheral_t peripheral)
 {
     if (RCC_IsValidPeripheral(peripheral) == 0U)
@@ -179,13 +167,11 @@ RCC_Status_t RCC_ResetPeripheral(RCC_Peripheral_t peripheral)
         return RCC_ERROR_UNSUPPORTED_OPERATION;
     }
 
-    /* Assert peripheral reset */
     *register_address |= (1UL << peripheral_bit);
 
-    /* Ensure reset assertion reaches RCC */
+    /* Readback ensures the reset assertion reaches RCC. */
     (void)*register_address;
 
-    /* Release peripheral reset */
     *register_address &= ~(1UL << peripheral_bit);
 
     return RCC_OK;
